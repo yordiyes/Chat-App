@@ -32,11 +32,13 @@ function Register() {
         username,
         email,
         password
-      });
+      }); 
       if(data.status===false){
+        console.log("something1");
         toast.error(data.msg, toastOptions)
       }
       if(data.status===true){
+        console.log("something1");
         localStorage.setItem('chat-app-user', JSON.stringify(data.user));
       }
       navigate("/");

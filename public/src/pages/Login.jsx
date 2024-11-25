@@ -22,39 +22,41 @@ function Login() {
     theme: "dark"
   };
 
-  const handleSubmit = async(event) => {
+  const handleSubmit = async (event) => {
     event.preventDefault();
     if (handleValidation()) {
-      const { username, password} = values;
-      const {data} = await axios.post(loginRoute,{
-        username: username.trim(),
-        password
-      });
-      if(data.status===false){
-        toast.error(data.msg, toastOptions)
+      const { username, password } = values;
+      try {
+        const { data } = await axios.post(loginRoute, {
+          username: username.trim(),
+          password,
+        });
+        if (data.status === false) {
+          toast.error(data.msg, toastOptions);
+        } else if (data.status === true) {
+          localStorage.setItem("chat-app-user", JSON.stringify(data.user));
+          navigate("/"); // Only redirect if login is successful
+        }
+      } catch (error) {
+        toast.error("Error, check your email or password.", toastOptions);
       }
-      if(data.status===true){
-        localStorage.setItem('chat-app-user', JSON.stringify(data.user));
-      }
-      navigate("/");
     }
   };
+  
 
-  const handleValidation = () => {
-    const { username,  password } = values;
-    if (password === "") {
-      toast.error("Email and Password as required.", toastOptions);
-      return false;
-    } else if (username.length === "") {
-      toast.error("Email and Password as required.", toastOptions);
-      return false;
-    } 
-    return true;
-  };
+const handleValidation = () => {
+  const { username, password } = values;
+  if (username.trim() === "" || password.trim() === "") {
+    toast.error("Username and Password are required.", toastOptions);
+    return false;
+  }
+  return true;
+};
 
-  const handleChange = (event) => {
-    setValues({ ...values, [event.target.name]: event.target.value });
-  };
+
+const handleChange = (event) => {
+  setValues({ ...values, [event.target.name]: event.target.value });
+};
 
   return (
     <>
