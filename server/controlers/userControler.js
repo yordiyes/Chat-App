@@ -1,25 +1,6 @@
 const User = require("../model/userModel");
 const bcrypt = require("bcrypt");
 
-module.exports.login = async (req, res, next) => {
-  try {
-    const { username, password } = req.body;
-    const user = await User.findOne({ username });
-    if (!user) {
-      return res.status(401).json({ msg: "Incorrect Username or Password", status: false });
-    }
-    const isPasswordValid = await bcrypt.compare(password, user.password);
-    if (!isPasswordValid) {
-      return res.status(401).json({ msg: "Incorrect Username or Password", status: false });
-    }
-    const userResponse = { ...user._doc };
-    delete userResponse.password; // Avoid sending password hash back
-    return res.status(200).json({ status: true, user: userResponse });
-  } catch (ex) {
-    next(ex);
-  }
-};
-
 
 module.exports.register = async (req, res, next) => {
   try {
@@ -38,6 +19,43 @@ module.exports.register = async (req, res, next) => {
     });
     delete user.password;
     return res.json({ status: true, user });
+  } catch (ex) {
+    next(ex);
+  }
+};
+
+module.exports.setAvatar = async (req, res, next) => {
+  try{
+    const userId = req.params.id;
+    const avatarImage = req.params.image;
+    const userData = await User.findByIdAndUpdate(userId, {
+      isAvatarImageSet:  true,
+      avatarImage,
+    });
+    return res.json({
+      isSet: userData.isAvatarImageSet, 
+      image: userData.avatarImage,
+    })
+  }catch(ex){
+    next(ex)
+  }
+}; 
+
+
+module.exports.login = async (req, res, next) => {
+  try {
+    const { username, password } = req.body;
+    const user = await User.findOne({ username });
+    if (!user) {
+      return res.status(401).json({ msg: "Incorrect Username or Password", status: false });
+    }
+    const isPasswordValid = await bcrypt.compare(password, user.password);
+    if (!isPasswordValid) {
+      return res.status(401).json({ msg: "Incorrect Username or Password", status: false });
+    }
+    const userResponse = { ...user._doc };
+    delete userResponse.password; // Avoid sending password hash back
+    return res.status(200).json({ status: true, user: userResponse });
   } catch (ex) {
     next(ex);
   }
