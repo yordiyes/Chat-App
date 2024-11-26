@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import styled from 'styled-components';
 import { Link, useNavigate} from 'react-router-dom';
 import Logo from "../assets/logo.svg";
@@ -22,6 +22,11 @@ function Login() {
     theme: "dark"
   };
 
+  useEffect(() =>{
+     if(localStorage.getItem("chat-app-user")){
+      navigate("/");
+     }
+  }, []);
   const handleSubmit = async (event) => {
     event.preventDefault();
     if (handleValidation()) {
@@ -38,7 +43,7 @@ function Login() {
           navigate("/"); // Only redirect if login is successful
         }
       } catch (error) {
-        toast.error("Error, check your email or password.", toastOptions);
+        toast.error("Invalid email or password.", toastOptions);
       }
     }
   };
