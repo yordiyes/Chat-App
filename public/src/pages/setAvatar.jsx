@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import styled from 'styled-components';
-import {json, useNavigate} from 'react-router-dom';
+import { useNavigate} from 'react-router-dom';
 import loader from "../assets/loader.gif";
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
@@ -22,6 +22,12 @@ export default function SetAvatar() {
         draggable: true,
         theme: "dark"
       };
+
+      useEffect(() =>{
+        if(!localStorage.getItem("chat-app-user")){
+        navigate("/login");
+        }
+      },[]);    
 
     const setProfilePicture = async () => {
       if(selectedAvatar===undefined){
