@@ -20,7 +20,7 @@ function Chat() {
         navigate("/login");
       } else {
         const user = await JSON.parse(localStorage.getItem("chat-app-user"));
-        setCurrentUser(user); // Correctly set currentUser state
+        setCurrentUser(user); 
         setIsLoaded(true);
       }
     };
@@ -61,7 +61,7 @@ function Chat() {
         {isLoaded && currentChat === undefined ? (
             <Welcome currentUser={currentUser}/>
           ) : (
-            <ChatContainer currentUser={currentUser}/>
+            <ChatContainer currentChat={currentChat}/>
           )
         }
       </div>
