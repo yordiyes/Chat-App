@@ -2,15 +2,22 @@ import React from 'react'
 import styled from 'styled-components'
 import Logout from './Logout';
 import ChatInput from './ChatInput';
-import Messages from './Messages'
+import { sendMassageRoute } from '../utils/APIRoutes';
+// import Messages from './Messages';
+import axios from 'axios';
 
-export default function ChatContainer({currentChat}) {
+export default function ChatContainer({currentChat, currentUser}) {
   if(!currentChat){
     return <div>Chat loading ... </div>
   }
 
   const handleSendMsg = async (msg) => {
-
+    await axios.post(sendMassageRoute, {
+      from: currentUser._id,
+      to: currentChat._id,
+      message: { text: msg }  // Wrap `msg` inside an object with a `text` field
+    });
+  
   }
   return <Container>
     <div className="chat-header">
@@ -27,7 +34,7 @@ export default function ChatContainer({currentChat}) {
       </div>
       <Logout/>
     </div>
-    <Messages/>
+    {/* <Messages/> */}
     <ChatInput handleSendMsg={handleSendMsg}/>
   </Container>
 }
